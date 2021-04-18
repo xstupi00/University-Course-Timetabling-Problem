@@ -1,0 +1,8 @@
+{
+  "generations_number": 200000,
+  "population_size": 50,
+  "crossover_rate": 0.8,
+  "mutation_rate": 0.5,
+  "n1_applications": 100,
+  "n2_applications": 100
+}
