@@ -9,7 +9,6 @@ from types import SimpleNamespace
 import jsonschema
 import numpy as np
 import numpy.random
-import pandas as pd
 
 from ucttp_instance import UcttpInstance
 
@@ -38,6 +37,7 @@ class DifferentialEvolution:
         self._collision_events = None
         self._sorted_events = None
         self._fitness = None
+        self._students_events = None
         self._event_timetable = self._init_event_timetable()
         self._event_timetables = []
         self._DAYS = 5
@@ -50,7 +50,7 @@ class DifferentialEvolution:
     def _load_parameters(self):
         global PARAMETERS_FILE
 
-        file = os.path.abspath(os.path.dirname(__file__) + f'/{PARAMETERS_FILE}')
+        file = os.path.abspath(os.path.dirname(__file__) + f"/{PARAMETERS_FILE}")
         if not os.path.exists(file):
             raise FileNotFoundError
         with open(file) as json_file:
@@ -64,6 +64,7 @@ class DifferentialEvolution:
         logger.debug(f"Mutation rate: {self._parameters.mutation_rate}")
 
     def _constructive_heuristic(self):
+        self._students_events = self._instance.get_student_events().to_dict()
         self._sorted_events, self.available_rooms = self._instance.get_sorted_events()
         self._collision_events = self._instance.get_collision_events()
         for idx in range(self._parameters.population_size):
@@ -138,16 +139,28 @@ class DifferentialEvolution:
             event_timetable[event] = (timetable[0], timetable[1])
         return event_timetable
 
+    @staticmethod
+    def _construct_sequences(day_timeslots):
+        sequences, sequence = [], []
+        timeslots_len = len(day_timeslots)
+        for idx in range(timeslots_len):
+            sequence.append(day_timeslots[idx])
+            if idx >= timeslots_len - 1 or day_timeslots[idx] + 1 != day_timeslots[idx + 1]:
+                sequences.append(sequence)
+                sequence = []
+        return sequences
+
     def _object_function(self, event_timetable, timetable=None, event=None):
         def get_consecutive_score(events):
-            scheduled_timeslots = np.sort(event_timetable[np.array(events)]['f1'])
-            scheduled_timeslots = scheduled_timeslots[scheduled_timeslots != -1]
-            days_timeslots = np.array(np.split(
-                scheduled_timeslots, scheduled_timeslots.searchsorted(np.arange(0, self.TIMESLOTS, self._HOURS)),
-            )[1:], dtype=object)
-            timeslots_sequences = [np.split(day, np.where(np.diff(day) != 1)[0] + 1) for day in days_timeslots]
-            return np.sum([max(len(y) - 2, 0) for x in timeslots_sequences for y in x]), \
-                np.sum([day_timeslot.size for day_timeslot in days_timeslots if day_timeslot.size == 1])
+            sched_timeslots = event_timetable[events]['f1'].tolist()
+            days_timeslots = []
+            [days_timeslots.append([]) for _ in range(5)]
+            [days_timeslots[d].append(s % self._HOURS)
+             for d in range(0, self._DAYS) for s in sched_timeslots if s // self._HOURS == d]
+
+            return sum([sum([max(len(seq) - 2, 0)
+                             for seq in self._construct_sequences(day_timeslot)]) for day_timeslot in days_timeslots]), \
+                   [[t // self._HOURS for t in sched_timeslots].count(d) for d in range(self._HOURS)].count(1)
 
         if event is not None and timetable is not None:
             event_timetable[event] = (timetable[0], timetable[1])
@@ -156,12 +169,13 @@ class DifferentialEvolution:
             (event_timetable['f1'] % self._HOURS == self._HOURS - 1) & (event_timetable['f1'] != -1)
         )].sum()
 
-        students_events = self._instance.get_student_events()
-        df = (students_events[students_events['Event'].map(len) > 2])['Event'].apply(lambda x: get_consecutive_score(x))
-        s2_s3 = pd.DataFrame(df.values.tolist(), index=df.index).sum(0)
+        s2_s3 = [get_consecutive_score(student_events[1])
+                 for student_events in self._students_events['Event'].items() if len(student_events[1]) > 2]
 
-        logger.info(f"S1={s1}; S2={s2_s3[0]}, S3={s2_s3[1]}")
-        return s1 + s2_s3[0] + s2_s3[1]
+        s2 = sum(s2 for s2, _ in s2_s3)
+        s3 = sum(s3 for _, s3 in s2_s3)
+        logger.info(f"S1={s1}; S2={s2}, S3={s3}")
+        return s1 + s2 + s3
 
     def _get_timetables(self, event, iteration, final=True):
         timetables = np.array([
@@ -252,9 +266,12 @@ class DifferentialEvolution:
         self._load_parameters()
         self._constructive_heuristic()
         self._evaluate_timetables()
+        results = []  #
         for idx, _ in enumerate(range(self._parameters.generations_number)):
             logger.warning(f"Run DEA iteration no. {idx}: {self._fitness[0]}")
+            results.append(self._fitness[0])  #
             if self._fitness[0] == 0:
                 break
             self._differential_evolution_algorithm()
-        [print(str(x[0]) + ' ' + str(x[1])) for x in self._event_timetables[0]]
+        return results  #
+        # [print(str(x[0]) + ' ' + str(x[1])) for x in self._event_timetables[0]] #

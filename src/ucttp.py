@@ -6,7 +6,7 @@ import click
 from differential_evolution import DifferentialEvolution
 from input import get_input_file, parse_input_file
 
-LOGGING_LEVEL = logging.WARNING
+LOGGING_LEVEL = logging.CRITICAL
 
 
 def setup_logger():
@@ -27,9 +27,14 @@ def setup_logger():
 @click.option('--instance', '-i', required=True, type=click.STRING, callback=get_input_file,
               help="The problem instance files with the specified format.")
 def main(instance):
+    setup_logger()
     DifferentialEvolution(parse_input_file(instance)).run()
 
 
-if __name__ == '__main__':
+def _main(instance):
     setup_logger()
+    return DifferentialEvolution(parse_input_file(instance)).run()
+
+
+if __name__ == '__main__':
     main()

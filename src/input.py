@@ -5,7 +5,7 @@ from ucttp_instance import UcttpInstance
 
 logger = logging.getLogger()
 
-INPUT_DIR = '/../Examples'  # input directory
+INPUT_DIR = '/../inputs'  # input directory
 
 
 def get_input_file(_, __, file_name: str) -> str:
