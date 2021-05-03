@@ -35,13 +35,13 @@ def population_size_dependence():
 def generations_number_dependence():
     result_file = os.path.abspath(os.path.dirname(__file__) + f'{GENERATION_DEPENDENCE}')
     _, _, instances = next(os.walk(os.path.abspath(os.path.dirname(__file__) + f'{INPUT_DIR}')))
+    instances = ["large.tim"]
     for instance in instances:
         set_parameters(50, 20000)
         print(f"{instance}")
         result = _main(os.path.abspath(os.path.dirname(__file__) + f'{INPUT_DIR}/{instance}'))
         with open(result_file, 'a') as file:
             file.write(f"{instance} - {result}\n")
-
 
 if __name__ == '__main__':
     # population_size_dependence()

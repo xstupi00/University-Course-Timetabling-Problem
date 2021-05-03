@@ -6,7 +6,7 @@ import click
 from differential_evolution import DifferentialEvolution
 from input import get_input_file, parse_input_file
 
-LOGGING_LEVEL = logging.CRITICAL
+LOGGING_LEVEL = logging.WARNING
 
 
 def setup_logger():
