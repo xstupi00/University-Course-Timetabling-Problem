@@ -43,6 +43,7 @@ def generations_number_dependence():
         with open(result_file, 'a') as file:
             file.write(f"{instance} - {result}\n")
 
+
 if __name__ == '__main__':
-    # population_size_dependence()
+    population_size_dependence()
     generations_number_dependence()

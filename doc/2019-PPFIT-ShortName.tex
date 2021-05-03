@@ -1,0 +1,137 @@
+\documentclass{PPFIT} % pro psaní v angličtině / for writing in English
+% \documentclass[czech]{PPFIT} % pro psaní v češtině / for writing in Czech
+%\documentclass[slovak]{PPFIT} % pro psaní ve slovenštině / for writing in Slovak
+
+%--------------------------------------------------------
+%--------------------------------------------------------
+%	PŘIZPŮSOBENÍ PDF / PDF CUSTOMIZATION
+%--------------------------------------------------------
+
+\hypersetup{
+	pdftitle={Paper Title},
+	pdfauthor={Author},
+	pdfkeywords={Keyword1, Keyword2, Keyword3}
+}
+
+%--------------------------------------------------------
+%--------------------------------------------------------
+%  PŘEDBĚŽNÁ vs. KONEČNÁ VERZE / REVIEW vs. FINAL VERSION
+%--------------------------------------------------------
+%   NECHTE následující řádek zakomentovaný pro PŘEDBĚŽNÉ VERZE
+%   Pro KONEČNOU VERZI řádek odkomentujte.
+%   LEAVE this line commented out for the REVIEW VERSIONS
+%   UNCOMMENT this line to get the FINAL VERSION
+
+\PPFinalCopy
+
+
+\PPYear{2020/2021}
+
+\ifczechslovak%
+    %--------------------------------------------------------
+    %--------------------------------------------------------
+    %	INFORMACE O ČLÁNKU
+    %--------------------------------------------------------    
+
+  \PaperTitle{Jak napsat skvělý článek}
+	
+	\Authors{Adam Herout*}
+	\affiliation{*%
+	  \href{mailto:herout@fit.vut.cz}{herout@fit.vut.cz},
+	  \textit{Fakulta informačních technologií, Vysoké učení technické v Brně}}
+
+	\Keywords{Klíčové slovo1 --- Klíčové slovo2 --- Klíčové slovo3}
+	
+	\Supplementary{\href{http://youtu.be/S3msCdn3fNM}{Demonstrační Video} --- \href{http://fit.vut.cz/}{Stáhnutelný Kód}}
+
+    %--------------------------------------------------------
+    %--------------------------------------------------------
+    %	ABSTRAKT
+    %--------------------------------------------------------
+    \Abstract{
+        O jaký problém se jedná? O jaké téma? Jaký je cíl této práce?
+        \phony{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ullamcorper suscipit euismod. Mauris sed lectus non massa molestie congue. In hac habitasse platea dictumst.}
+        %	
+        Jak se tento problém řeší a jak je cíle dosaženo (metodika)?
+        \phony{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ullamcorper suscipit euismod. Mauris sed lectus non massa molestie congue. In hac habitasse platea dictumst. Curabitur massa neque, commodo posuere fringilla ut, cursus at dui. Nulla quis purus a justo pellentesque.}
+        %	
+        Jaké jsou konkrétní výsledky? Jak dobře se daný problém řeší?
+        \phony{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ullamcorper suscipit euismod. Mauris sed lectus non massa molestie congue. In hac habitasse platea dictumst.}
+        %	
+        Takže co? Jak užitečná je tato práce pro vědu a pro čtenáře?
+        \phony{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ullamcorper suscipit euismod.}
+    }
+\else%
+    %--------------------------------------------------------
+    %--------------------------------------------------------
+    %	INFORMATION ABOUT THE ARTICLE
+    %--------------------------------------------------------
+    \PaperTitle{Simulation Tools and Techniques (SNT)\\ University Course Timetabling Problem (UCTP)}
+	
+	\Authors{Šimon Stupinský,
+		\href{mailto:xstupi00@fit.vut.cz}{xstupi00@fit.vut.cz},\\
+		\textit{Faculty of Information Technology, Brno University of Technology}}
+	\affiliation{*%
+		\href{mailto:xstupi00@fit.vut.cz}{xstupi00@fit.vut.cz},
+		\textit{Faculty of Information Technology, Brno University of Technology}}
+
+	\Keywords{Keyword1 --- Keyword2 --- Keyword3}
+	
+	\Supplementary{\href{http://youtu.be/S3msCdn3fNM}{Demonstation video} --- \href{http://fit.vut.cz/}{Downloadable code}}
+	
+	%--------------------------------------------------------
+    %--------------------------------------------------------
+    %	ABSTRACT
+    %--------------------------------------------------------
+    \Abstract{}
+\fi
+
+%--------------------------------------------------------
+%--------------------------------------------------------
+%	TEASER 
+%--------------------------------------------------------
+\Teaser{
+%	\TeaserImage{placeholder.pdf}
+%	\TeaserImage{placeholder.pdf}
+%	\TeaserImage{placeholder.pdf}
+}
+
+%--------------------------------------------------------
+%--------------------------------------------------------
+%--------------------------------------------------------
+%--------------------------------------------------------
+\begin{document}
+\startdocument
+%--------------------------------------------------------
+%--------------------------------------------------------
+%	OBSAH ČLÁNKU / CONTENT OF THE ARTICLE
+%--------------------------------------------------------
+\ifczechslovak
+    \input{2019-PPFIT-ShortName-text.tex}
+\else
+    \input{2019-PPFIT-ShortName-text-en.tex}
+\fi
+
+%--------------------------------------------------------
+%--------------------------------------------------------
+%--------------------------------------------------------
+%	LITERATURA
+%--------------------------------------------------------
+%--------------------------------------------------------
+\phantomsection
+% \ifczech
+%     \bibliographystyle{bib-styles/czplain}
+% \fi
+% \ifslovak
+%     \bibliographystyle{bib-styles/skplain}
+% \fi
+\ifenglish
+    \bibliographystyle{bib-styles/enplain}
+\fi
+
+\bibliography{2019-PPFIT-ShortName-bib}
+
+%--------------------------------------------------------
+%--------------------------------------------------------
+%--------------------------------------------------------
+\end{document}

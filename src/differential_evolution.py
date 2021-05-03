@@ -266,12 +266,12 @@ class DifferentialEvolution:
         self._load_parameters()
         self._constructive_heuristic()
         self._evaluate_timetables()
-        results = []  #
+        # results = []  # uncomment to run experiments
         for idx, _ in enumerate(range(self._parameters.generations_number)):
             logger.warning(f"Run DEA iteration no. {idx}: {self._fitness[0]}")
-            results.append(self._fitness[0])  #
+            # results.append(self._fitness[0])  # uncomment to run experiments
             if self._fitness[0] == 0:
                 break
             self._differential_evolution_algorithm()
-        return results  #
-        # [print(str(x[0]) + ' ' + str(x[1])) for x in self._event_timetables[0]] #
+        # return results  # uncomment to run experiments
+        [print(str(x[0]) + ' ' + str(x[1])) for x in self._event_timetables[0]] # comment to run experiments
